@@ -1,8 +1,8 @@
-import './App.css'
-import RegisterLayout from './pages/RegisterLayout'
+import useRouteElement from './useRouteElement'
 
 function App() {
-  return <RegisterLayout />
+  const routeElement = useRouteElement()
+  return <div>{routeElement}</div>
 }
 
 export default App
