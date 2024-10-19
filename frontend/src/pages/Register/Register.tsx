@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { registerAccount } from '../../apis/auth.api'
 import { omit } from 'lodash'
-import { isAxiosUnauthorizedError, isAxiosUnprocessableEntityError } from '../../utils/utils'
+import { isAxiosUnprocessableEntityError } from '../../utils/utils'
 import { ResponseApi } from '../../types/utils.type'
 type FormData = Schema
 export default function Register() {
