@@ -8,6 +8,7 @@ import { registerAccount } from '../../apis/auth.api'
 import { omit } from 'lodash'
 import { isAxiosUnprocessableEntityError } from '../../utils/utils'
 import { ResponseApi } from '../../types/utils.type'
+import { toast } from 'react-toastify'
 type FormData = Schema
 export default function Register() {
   const {
@@ -15,6 +16,7 @@ export default function Register() {
     handleSubmit,
     getValues,
     setError,
+    reset,
     formState: { errors }
   } = useForm<FormData>({ resolver: yupResolver(schema) })
 
@@ -23,12 +25,16 @@ export default function Register() {
   })
 
   const onSubmit = handleSubmit((data) => {
+    console.log(data)
+
     const body = omit(data, ['confirm_password'])
     console.log(body)
 
     registerAccountMutation.mutate(body, {
       onSuccess: (data) => {
         console.log('Register success: ', data)
+        toast.success(data.data.message)
+        reset()
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ResponseApi<Omit<FormData, 'confirm_password'>>>(error)) {
@@ -41,18 +47,6 @@ export default function Register() {
               })
             })
           }
-          // if (formError?.email) {
-          //   setError('email', {
-          //     message: formError.email,
-          //     type: 'error'
-          //   })
-          // }
-          // if (formError?.password) {
-          //   setError('password', {
-          //     message: formError.password,
-          //     type: 'error'
-          //   })
-          // }
         }
       }
     })
