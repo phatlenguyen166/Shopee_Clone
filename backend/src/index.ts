@@ -19,6 +19,7 @@ app.use(express.json())
 
 routes.forEach((item) => item.routes.forEach((route) => app.use(item.prefix + route.path, route.route)))
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(function (err: any, req: any, res: any, next: any) {
   responseError(res, err)
 })

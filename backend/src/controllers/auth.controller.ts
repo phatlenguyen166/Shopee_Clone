@@ -6,7 +6,7 @@ import { AccessTokenModel } from '~/models/refresh-token.model'
 import { RefreshTokenModel } from '~/models/access-token.model'
 import { signToken } from '~/utils/jwt'
 import { UserModel } from '~/models/user.model'
-import { hashValue } from '~/utils/crypt'
+import { compareValue, hashValue } from '~/utils/crypt'
 import { STATUS } from '~/constants/status'
 import { Request, Response } from 'express'
 
@@ -71,8 +71,58 @@ const registerController = async (req: Request, res: Response) => {
   })
 }
 
+const loginController = async (req: Request, res: Response) => {
+  const { expireAccessTokenConfig, expireRefreshTokenConfig } = getExpire(req)
+  const body: Login = req.body
+  const { email, password } = body
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userInDB: any = await UserModel.findOne({ email: email }).lean()
+  if (!userInDB) {
+    throw new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
+      password: 'Email hoặc password không đúng'
+    })
+  } else {
+    const match = compareValue(password, userInDB.password)
+    if (!match) {
+      throw new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
+        password: 'Email hoặc password không đúng'
+      })
+    }
+    // eslint-disable-next-line prefer-const
+    let payloadJWT: PayloadToken = {
+      id: userInDB._id,
+      email: userInDB.email,
+      roles: userInDB.roles,
+      created_at: new Date().toISOString()
+    }
+    const access_token = await signToken(payloadJWT, config.SECRET_KEY, expireAccessTokenConfig)
+
+    const refresh_token = await signToken(payloadJWT, config.SECRET_KEY, expireRefreshTokenConfig)
+
+    await new AccessTokenModel({
+      user_id: userInDB._id,
+      token: access_token
+    }).save()
+    await new RefreshTokenModel({
+      user_id: userInDB._id,
+      token: refresh_token
+    }).save()
+    const response = {
+      message: 'Đăng nhập thành công',
+      data: {
+        access_token: 'Bearer ' + access_token,
+        expires: expireAccessTokenConfig,
+        refresh_token,
+        expires_refresh_token: expireRefreshTokenConfig,
+        user: omit(userInDB, ['password'])
+      }
+    }
+    return responseSuccess(res, response)
+  }
+}
 const authController = {
-  registerController
+  registerController,
+  loginController
 }
 
 export default authController

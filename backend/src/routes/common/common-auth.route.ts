@@ -6,7 +6,13 @@ import { wrapAsync } from '~/utils/response'
 
 const commonAuthRouter = Router()
 
-// Cách gọi middleware
+commonAuthRouter.post(
+  '/login',
+  authMiddleware.loginRules(),
+  helpersMiddleware.entityValidator,
+  wrapAsync(authController.loginController)
+)
+
 commonAuthRouter.post(
   '/register',
   authMiddleware.registerRules(), // Gọi middleware để kiểm tra quy tắc
