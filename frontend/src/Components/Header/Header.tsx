@@ -1,19 +1,7 @@
 import { Link } from 'react-router-dom'
-import { FloatingPortal, useFloating } from '@floating-ui/react'
-import { useState } from 'react'
-import { div } from 'framer-motion/client'
+import Popover from '../Poppver'
+
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const { refs, floatingStyles } = useFloating()
-
-  const showPopover = () => {
-    setIsOpen(true)
-  }
-
-  const hidePopover = () => {
-    setIsOpen(false)
-  }
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
       <div className='container'>
@@ -29,12 +17,18 @@ export default function Header() {
             </div>
           </div>
           <div className='flex-shrink flex-grow'></div>
-          <div
+          <Popover
+            renderPopover={
+              <div className='relative rounded-sm bg-white shadow-md'>
+                <div className='flex flex-col py-2 pr-28'>
+                  <button className='px-3 py-2 hover:text-orange'>Tiếng Việt</button>
+                  <button className='mt-2 px-3 py-2 hover:text-orange'>Tiếng Anh</button>
+                </div>
+              </div>
+            }
             className='flex cursor-pointer items-center py-1 hover:text-gray-300'
-            ref={refs.setReference}
-            onMouseEnter={showPopover}
-            onMouseLeave={hidePopover}
           >
+            {' '}
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -60,16 +54,24 @@ export default function Header() {
             >
               <path strokeLinecap='round' strokeLinejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' />
             </svg>
-          </div>
-          <FloatingPortal>
-            {isOpen && (
-              <div ref={refs.setFloating} style={floatingStyles}>
-                Tooltip
-              </div>
-            )}
-          </FloatingPortal>
+          </Popover>
 
-          <div className='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'>
+          <Popover
+            className='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'
+            renderPopover={
+              <div className='rounded-sm bg-white shadow-md'>
+                <Link to='/' className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
+                  Tài khoản của tôi
+                </Link>
+                <Link to='/' className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
+                  Đơn mua
+                </Link>
+                <button className='block w-full px-4 py-3 text-left hover:bg-slate-100 hover:text-cyan-500'>
+                  Đăng xuất
+                </button>
+              </div>
+            }
+          >
             <div className='mr-2 h-6 w-6 flex-shrink-0'>
               <img
                 src='https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/423540152_1927772020992581_5981214919211340970_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHl2cghWAtrq0tjJCX-SsL7Jzf_8zjgSMknN__zOOBIyYThgkNeQbA_sclHjRDQ_kpXWNgS2EBpRZ6MbIHVmLzB&_nc_ohc=kTeD3YeFfHEQ7kNvgGF0CqF&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=AoG4X7dF8490NFTWAvxSpJm&oh=00_AYA6G2FeRUMU8MEb1lEpCUUJAKZK11xbjBGUnhdGI_MKqg&oe=671A9B9B'
@@ -78,7 +80,7 @@ export default function Header() {
               />
             </div>
             <div className='text-sm'>HoangPhat</div>
-          </div>
+          </Popover>
         </div>
         <div className='mt-4 grid grid-cols-12 items-end gap-4'>
           <Link to='/' className='col-span-2'>
