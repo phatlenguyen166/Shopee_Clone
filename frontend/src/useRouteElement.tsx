@@ -1,13 +1,26 @@
-import { useRoutes } from 'react-router-dom'
+/* eslint-disable react-refresh/only-export-components */
+import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import Login from './pages/Login/Login'
 import ProductList from './pages/ProductList'
 import Register from './pages/Register'
 import RegisterLayout from './Layouts/RegisterLayout'
 import MainLayout from './Layouts/MainLayout'
+import Profile from './pages/Profile'
+
+const isAuthenticated = true
+const ProtectedRoute = () => {
+  return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
+}
+
+const RejectedRoute = () => {
+  return !isAuthenticated ? <Outlet /> : <Navigate to='/' />
+}
+
 export default function useRouteElement() {
   const routeElements = useRoutes([
     {
-      path: '/',
+      path: '',
+      index: true,
       element: (
         <MainLayout>
           <ProductList />
@@ -15,20 +28,40 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/login',
-      element: (
-        <RegisterLayout>
-          <Login />
-        </RegisterLayout>
-      )
+      path: '',
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: '/profile',
+          element: (
+            <MainLayout>
+              <Profile />
+            </MainLayout>
+          )
+        }
+      ]
     },
     {
-      path: '/register',
-      element: (
-        <RegisterLayout>
-          <Register />
-        </RegisterLayout>
-      )
+      path: '',
+      element: <RejectedRoute />,
+      children: [
+        {
+          path: '/login',
+          element: (
+            <RegisterLayout>
+              <Login />
+            </RegisterLayout>
+          )
+        },
+        {
+          path: '/register',
+          element: (
+            <RegisterLayout>
+              <Register />
+            </RegisterLayout>
+          )
+        }
+      ]
     }
   ])
 
