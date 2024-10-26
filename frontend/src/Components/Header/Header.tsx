@@ -61,7 +61,7 @@ export default function Header() {
             className='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'
             renderPopover={
               <div className='rounded-sm bg-white shadow-md'>
-                <Link to='/' className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
+                <Link to='/profile' className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
                   Tài khoản của tôi
                 </Link>
                 <Link to='/' className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
