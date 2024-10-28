@@ -11,10 +11,12 @@ import { isAxiosUnprocessableEntityError } from '../../utils/utils'
 import Input from '../../Components/Input'
 import { useContext } from 'react'
 import { AppContext } from '../../contexts/app,.context'
+import Button from '../../Components/Button'
 
 type FormData = LoginSchema
 export default function Login() {
-  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+
   const navigate = useNavigate()
   const {
     register,
@@ -35,6 +37,7 @@ export default function Login() {
     loginMutation.mutate(body, {
       onSuccess: (data) => {
         setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         toast.success(data.data.message)
         navigate('/')
         reset()
@@ -81,9 +84,13 @@ export default function Login() {
                 autoComplete='on'
               />
               <div className='mt-3'>
-                <button className='w-full bg-red-500 px-2 py-4 text-center text-sm uppercase text-white hover:bg-red-600'>
+                <Button
+                  className='flex w-full items-center justify-center bg-red-500 px-2 py-4 text-sm uppercase text-white hover:bg-red-600'
+                  isLoading={loginMutation.isPending}
+                  disabled={loginMutation.isPending}
+                >
                   Đăng nhập
-                </button>
+                </Button>
               </div>
               <div className='mt-8 flex items-center justify-center'>
                 <span className='text-gray-400'>Bạn chưa có tài khoản? </span>

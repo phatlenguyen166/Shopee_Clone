@@ -11,6 +11,7 @@ import { ErrorResponse } from '../../types/utils.type'
 import { toast } from 'react-toastify'
 import { useContext } from 'react'
 import { AppContext } from '../../contexts/app,.context'
+import Button from '../../Components/Button'
 type FormData = Schema
 export default function Register() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AppContext)
@@ -95,9 +96,13 @@ export default function Register() {
               />
 
               <div className='mt-3'>
-                <button className='w-full bg-red-500 px-2 py-4 text-center text-sm uppercase text-white hover:bg-red-600'>
+                <Button
+                  className='flex w-full items-center justify-center bg-red-500 px-2 py-4 text-sm uppercase text-white hover:bg-red-600'
+                  isLoading={registerAccountMutation.isPending}
+                  disabled={registerAccountMutation.isPending}
+                >
                   Đăng ký
-                </button>
+                </Button>
               </div>
               <div className='mt-5 flex items-center justify-center'>
                 <span className='text-gray-400'>Bạn đã có tài khoản? </span>

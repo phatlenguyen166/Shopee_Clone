@@ -5,14 +5,15 @@ import { useMutation } from '@tanstack/react-query'
 import { logout } from '../../apis/auth.api'
 import { useContext } from 'react'
 import { AppContext } from '../../contexts/app,.context'
-
+import path from '../../constants/path'
 export default function Header() {
-  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext)
+  const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
   const navigate = useNavigate()
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSuccess: () => {
       setIsAuthenticated(false)
+      setProfile(null)
       navigate('/login')
     }
   })
@@ -23,12 +24,12 @@ export default function Header() {
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
       <div className='container'>
         <div className='flex'>
-          <div className='flex cursor-pointer items-center py-1 hover:text-gray-300'>
+          <div className='flex cursor-pointer items-center py-1 hover:text-white/70'>
             <div className='text-sm'>
               <a href=''>Tải ứng dụng | </a>
             </div>
           </div>
-          <div className='flex flex-grow cursor-pointer items-center py-1 hover:text-gray-300'>
+          <div className='flex flex-grow cursor-pointer items-center py-1 hover:text-white/70'>
             <div className='ml-1 text-sm'>
               <a href=''>Kết nối | Facebook | Instagram </a>
             </div>
@@ -43,7 +44,7 @@ export default function Header() {
                 </div>
               </div>
             }
-            className='flex cursor-pointer items-center py-1 hover:text-gray-300'
+            className='flex cursor-pointer items-center py-1 hover:text-white/70'
           >
             {' '}
             <svg
@@ -77,7 +78,7 @@ export default function Header() {
               className='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'
               renderPopover={
                 <div className='rounded-sm bg-white shadow-md'>
-                  <Link to='/profile' className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
+                  <Link to={path.profile} className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
                     Tài khoản của tôi
                   </Link>
                   <Link to='/' className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
@@ -99,16 +100,16 @@ export default function Header() {
                   className='h-full w-full rounded-full object-cover'
                 />
               </div>
-              <div className='text-sm'>HoangPhat</div>
+              <div className='text-sm'>{profile?.email}</div>
             </Popover>
           )}
           {!isAuthenticated && (
             <div className='flex items-center text-base'>
-              <Link to='/register' className='mx-3 capitalize hover:text-white/70'>
+              <Link to={path.register} className='mx-3 capitalize hover:text-white/70'>
                 Đăng ký
               </Link>
               <div className='boder-r-white/40 h-4 border-r-[1px]'></div>
-              <Link to='/login' className='mx-3 capitalize hover:text-white/70'>
+              <Link to={path.login} className='mx-3 capitalize hover:text-white/70'>
                 Đăng nhập
               </Link>
             </div>
