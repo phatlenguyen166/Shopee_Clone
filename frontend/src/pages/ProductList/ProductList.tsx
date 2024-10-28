@@ -1,3 +1,9 @@
+import { useContext } from 'react'
+import { AppContext } from '../../contexts/app,.context'
+
 export default function ProdctList() {
-  return <div className='flex-col flex text-red-400 w-10 h-10'>ProdctList</div>
+  const { isAuthenticated } = useContext(AppContext)
+  console.log(isAuthenticated)
+
+  return <div className='flex h-10 w-10 flex-col text-red-400'>ProdctList</div>
 }

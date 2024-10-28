@@ -120,9 +120,19 @@ const loginController = async (req: Request, res: Response) => {
     return responseSuccess(res, response)
   }
 }
+
+const logoutController = async (req: Request, res: Response) => {
+  const access_token = req.headers.authorization?.replace('Bearer ', '')
+  await AccessTokenModel.findOneAndDelete({
+    token: access_token
+  }).exec()
+  return responseSuccess(res, { message: 'Đăng xuất thành công' })
+}
+
 const authController = {
   registerController,
-  loginController
+  loginController,
+  logoutController
 }
 
 export default authController

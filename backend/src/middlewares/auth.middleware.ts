@@ -1,4 +1,33 @@
+import { config } from '../constants/config'
+import { verifyToken } from '../utils/jwt'
+import { NextFunction, Request, Response } from 'express'
+import { ROLE } from '../constants/role.enum'
+import { responseError, ErrorHandler } from '../utils/response'
+import { STATUS } from '../constants/status'
+
 import { body } from 'express-validator'
+import { AccessTokenModel } from '~/models/refresh-token.model'
+
+const verifyAccessToken = async (req: Request, res: Response, next: NextFunction) => {
+  const access_token = req.headers.authorization?.replace('Bearer ', '')
+  if (access_token) {
+    try {
+      const decoded = (await verifyToken(access_token, config.SECRET_KEY)) as PayloadToken
+      req.jwtDecoded = decoded
+      const accessTokenDB = await AccessTokenModel.findOne({
+        token: access_token
+      }).exec()
+
+      if (accessTokenDB) {
+        return next()
+      }
+      responseError(res, new ErrorHandler(STATUS.UNAUTHORIZED, 'Không tồn tại token'))
+    } catch (error) {
+      responseError(res, error)
+    }
+  }
+  responseError(res, new ErrorHandler(STATUS.UNAUTHORIZED, 'Token không được gửi'))
+}
 
 const loginRules = () => {
   return [
@@ -27,7 +56,8 @@ export const registerRules = () => {
 }
 const authMiddleware = {
   loginRules,
-  registerRules
+  registerRules,
+  verifyAccessToken
 }
 
 export default authMiddleware

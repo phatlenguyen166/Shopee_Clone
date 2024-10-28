@@ -13,6 +13,8 @@ commonAuthRouter.post(
   wrapAsync(authController.loginController)
 )
 
+commonAuthRouter.post('/logout', authMiddleware.verifyAccessToken, wrapAsync(authController.logoutController))
+
 commonAuthRouter.post(
   '/register',
   authMiddleware.registerRules(), // Gọi middleware để kiểm tra quy tắc
