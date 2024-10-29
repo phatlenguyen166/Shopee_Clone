@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import authController from '~/controllers/auth.controller'
-import authMiddleware from '~/middlewares/auth.middleware'
-import helpersMiddleware from '~/middlewares/helpers.middleware'
+import authMiddleware from '~/middleware/auth.middleware'
+import helpersMiddleware from '~/middleware/helpers.middleware'
 import { wrapAsync } from '~/utils/response'
 
 const commonAuthRouter = Router()

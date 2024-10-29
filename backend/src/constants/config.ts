@@ -1,4 +1,5 @@
-import 'dotenv/config'
+/* eslint-disable @typescript-eslint/no-require-imports */
+require('dotenv').config()
 export const config = {
   SECRET_KEY: process.env.SECRET_KEY_JWT || '',
   EXPIRE_ACCESS_TOKEN: 7 * 24 * 60 * 60,

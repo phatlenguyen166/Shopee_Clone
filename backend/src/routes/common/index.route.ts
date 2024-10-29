@@ -1,4 +1,5 @@
 import commonAuthRouter from './common-auth.route'
+import commonProductRouter from './common-product.route'
 
 const commonRoutes = {
   prefix: '/',
@@ -6,6 +7,10 @@ const commonRoutes = {
     {
       path: '',
       route: commonAuthRouter
+    },
+    {
+      path: 'products',
+      route: commonProductRouter
     }
   ]
 }

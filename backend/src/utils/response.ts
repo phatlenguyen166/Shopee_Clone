@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 import { Response, Request, NextFunction } from 'express'
-import { STATUS } from '~/constants/status'
+import { STATUS } from '../constants/status'
 
 export const wrapAsync = (func: Function) => {
   return function (req: Request, res: Response, next: NextFunction) {
@@ -30,10 +29,12 @@ export const responseError = (res: Response, error: ErrorHandler | any) => {
     const errorObject = error.error
     return res.status(status).send({
       message: 'Lỗi',
-      data: errorObject
+      data: errorObject,
     })
   }
-  return res.status(STATUS.INTERNAL_SERVER_ERROR).send({ message: error.message })
+  return res
+    .status(STATUS.INTERNAL_SERVER_ERROR)
+    .send({ message: error.message })
 }
 
 export const responseSuccess = (res: Response, data: SuccessResponse) => {
