@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-require-imports */
 import express from 'express'
 import cors from 'cors'
@@ -12,7 +11,6 @@ import { responseError } from './utils/response'
 import { FOLDERS, FOLDER_UPLOAD, ROUTE_IMAGE } from './constants/config'
 import path from 'path'
 import { isProduction } from './utils/helper'
-import morgan from 'morgan'
 require('dotenv').config()
 
 const app: express.Application = express()
@@ -20,7 +18,6 @@ connectMongoDB()
 const routes = [{ ...commonRoutes }, { ...userRoutes }]
 app.use(helmet())
 app.use(cors())
-app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -36,7 +33,7 @@ const handlerImage: any = Object.values(FOLDERS).reduce(
 app.use(`/${ROUTE_IMAGE}`, ...handlerImage)
 
 routes.forEach((item) => item.routes.forEach((route) => app.use(item.prefix + route.path, route.route)))
-app.use(function (err: any, req: any, res: any) {
+app.use(function (err: any, req: any, res: any, next: any) {
   responseError(res, err)
 })
 
