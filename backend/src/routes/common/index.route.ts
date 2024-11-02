@@ -1,5 +1,6 @@
 import commonAuthRouter from './common-auth.route'
 import commonProductRouter from './common-product.route'
+import commonCategoryRouter from './common-category.route'
 
 const commonRoutes = {
   prefix: '/',
@@ -11,6 +12,10 @@ const commonRoutes = {
     {
       path: 'products',
       route: commonProductRouter
+    },
+    {
+      path: 'categories',
+      route: commonCategoryRouter
     }
   ]
 }
