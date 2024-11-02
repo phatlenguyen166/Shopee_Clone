@@ -86,10 +86,13 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
               }).toString()
             }}
             key={index}
-            className={classNames('mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm', {
-              'border-cyan-500': pageNumber === page,
-              'border-transparent': pageNumber !== page
-            })}
+            className={classNames(
+              'mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm hover:bg-slate-100',
+              {
+                'border-cyan-500': pageNumber === page,
+                'border-transparent': pageNumber !== page
+              }
+            )}
           >
             {pageNumber}
           </Link>
@@ -109,7 +112,7 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
               page: (page - 1).toString()
             }).toString()
           }}
-          className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm'
+          className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm hover:bg-slate-100'
         >
           Prev
         </Link>
@@ -127,7 +130,7 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
               page: (page + 1).toString()
             }).toString()
           }}
-          className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm'
+          className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm hover:bg-slate-100'
         >
           Next
         </Link>

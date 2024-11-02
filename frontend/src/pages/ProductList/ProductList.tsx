@@ -5,7 +5,6 @@ import Product from './Product/Product'
 import SortProductList from './SortProductList'
 import useQueryParams from '../../hooks/useQueryParams'
 import productApi from '../../apis/product.api'
-import { useEffect, useState } from 'react'
 import Pagination from '../../Components/Pagination'
 import { ProductListConfig } from '../../types/product.type'
 
@@ -21,7 +20,7 @@ export default function ProdctList() {
   const queryConfig: QueryConfig = omitBy(
     {
       page: queryParams.page || '1',
-      limit: queryParams.limit,
+      limit: queryParams.limit || 20,
       sort_by: queryParams.sort_by,
       exclude: queryParams.exclude,
       order: queryParams.order,
@@ -48,7 +47,7 @@ export default function ProdctList() {
               <AsideFilter />
             </div>
             <div className='col-span-10'>
-              <SortProductList />
+              <SortProductList queryConfig={queryConfig} pageSize={data.data.data.pagination.page_size} />
               <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                 {data &&
                   data.data.data.products.map((product) => (
