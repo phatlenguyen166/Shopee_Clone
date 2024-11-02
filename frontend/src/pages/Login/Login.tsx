@@ -13,7 +13,7 @@ import { useContext } from 'react'
 import { AppContext } from '../../contexts/app,.context'
 import Button from '../../Components/Button'
 
-type FormData = LoginSchema
+type FormData = Pick<LoginSchema, 'email' | 'password'>
 export default function Login() {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
 

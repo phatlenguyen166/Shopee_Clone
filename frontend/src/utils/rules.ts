@@ -48,6 +48,14 @@ export const getRules = (getValues: UseFormGetValues<any>): Rules => ({
   }
 })
 
+function testPriceMinMax(this: yup.TestContext<yup.AnyObject>) {
+  const { price_min, price_max } = this.parent as { price_min: string; price_max: string }
+  if (price_min !== '' && price_max !== '') {
+    return Number(price_max) >= Number(price_min)
+  }
+  return price_min !== '' || price_max !== ''
+}
+
 export const schema = yup
   .object({
     email: yup.string().required('Vui lòng nhập email').email('Email không đúng định dạng'),
@@ -61,11 +69,21 @@ export const schema = yup
       .required('Vui lòng nhập lại mật khẩu')
       .oneOf([yup.ref('password')], 'Nhập lại mật khẩu không khớp')
       .min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
-      .max(20, 'Mật khẩu không quá 20 ký tự')
+      .max(20, 'Mật khẩu không quá 20 ký tự'),
+    price_min: yup.string().test({
+      name: 'price-not-allowed',
+      message: 'Giá không phù hợp',
+      test: testPriceMinMax
+    }),
+    price_max: yup.string().test({
+      name: 'price-not-allowed',
+      message: 'Giá không phù hợp',
+      test: testPriceMinMax
+    })
   })
   .required()
 
-export const loginSchema = schema.omit(['confirm_password'])
+export const loginSchema = schema.pick(['email', 'password'])
 export type LoginSchema = yup.InferType<typeof loginSchema>
 
 export type Schema = yup.InferType<typeof schema>

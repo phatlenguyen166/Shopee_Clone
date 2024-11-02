@@ -12,7 +12,10 @@ import { toast } from 'react-toastify'
 import { useContext } from 'react'
 import { AppContext } from '../../contexts/app,.context'
 import Button from '../../Components/Button'
-type FormData = Schema
+type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
+
+const registerSchema = schema.pick(['email', 'password', 'confirm_password'])
+
 export default function Register() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AppContext)
   const navigate = useNavigate()
@@ -23,7 +26,7 @@ export default function Register() {
     setError,
     reset,
     formState: { errors }
-  } = useForm<FormData>({ resolver: yupResolver(schema) })
+  } = useForm<FormData>({ resolver: yupResolver(registerSchema) })
 
   const registerAccountMutation = useMutation({
     mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.registerAccount(body)

@@ -15,9 +15,7 @@ export type QueryConfig = {
 
 export default function ProdctList() {
   const queryParams: QueryConfig = useQueryParams()
-  // useEffect(() => {
-  //   setPage
-  // }, [queryParams])
+
   const queryConfig: QueryConfig = omitBy(
     {
       page: queryParams.page || '1',
@@ -45,7 +43,7 @@ export default function ProdctList() {
     queryFn: () => categoryApi.getCategories(),
     placeholderData: keepPreviousData
   })
-  console.log(categoriesData)
+  // console.log(categoriesData)
 
   return (
     <div className='bg-gray-200 py-6'>
