@@ -37,7 +37,7 @@ export default function RatingStars({ queryConfig }: Props) {
                 .map((_, indexStar) => {
                   if (indexStar < 5 - index) {
                     return (
-                      <svg viewBox='0 0 9.5 8' key={index} className='mr-1 size-4'>
+                      <svg viewBox='0 0 9.5 8' key={indexStar} className='mr-1 size-4'>
                         <defs>
                           <linearGradient id='ratingStarGradient' x1='50%' x2='50%' y1='0%' y2='100%'>
                             <stop offset={0} stopColor='#ffca11' />
