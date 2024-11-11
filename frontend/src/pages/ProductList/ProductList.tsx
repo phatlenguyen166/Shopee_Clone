@@ -20,7 +20,7 @@ export default function ProdctList() {
   const queryConfig: QueryConfig = omitBy(
     {
       page: queryParams.page || '1',
-      limit: queryParams.limit || 20,
+      limit: queryParams.limit,
       sort_by: queryParams.sort_by,
       exclude: queryParams.exclude,
       order: queryParams.order,
