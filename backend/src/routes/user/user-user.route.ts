@@ -1,3 +1,3 @@
 import { Router } from 'express'
 
-export const userUserRoutes = Router()
+export const userUserRouter = Router()

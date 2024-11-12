@@ -1,11 +1,16 @@
-import { userUserRoutes } from './user-user.route'
+import { userPurchaseRouter } from './purchase.route'
+import { userUserRouter } from './user-user.route'
 
 const userRoutes = {
   prefix: '/',
   routes: [
     {
       path: 'user',
-      route: userUserRoutes
+      route: userUserRouter
+    },
+    {
+      path: 'purchases',
+      route: userPurchaseRouter
     }
   ]
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-require-imports */
 import express from 'express'
 import cors from 'cors'
@@ -33,7 +34,7 @@ const handlerImage: any = Object.values(FOLDERS).reduce(
 app.use(`/${ROUTE_IMAGE}`, ...handlerImage)
 
 routes.forEach((item) => item.routes.forEach((route) => app.use(item.prefix + route.path, route.route)))
-app.use(function (err: any, req: any, res: any, next: any) {
+app.use(function (err: any, req: any, res: any) {
   responseError(res, err)
 })
 
