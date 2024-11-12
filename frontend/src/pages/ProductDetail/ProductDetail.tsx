@@ -8,8 +8,11 @@ import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Product as ProductType, ProductListConfig } from '../../types/product.type'
 import Product from '../ProductList/components/Product'
+import QuantityController from '../../Components/QuantityController'
 
 export default function ProductDetail() {
+  const [buyCount, setBuyCount] = useState(1)
+
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
   const { data: productDetailData } = useQuery({
@@ -80,6 +83,10 @@ export default function ProductDetail() {
     imageRef.current?.removeAttribute('style')
   }
 
+  const handleBuyCount = (value: number) => {
+    setBuyCount(value)
+  }
+
   if (!product) return null
   return (
     <div className='bg-gray-200 py-6'>
@@ -116,7 +123,7 @@ export default function ProductDetail() {
                     <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
                   </svg>
                 </button>
-                {currentImages.map((img, index) => {
+                {currentImages.map((img) => {
                   const isActive = img === activeImage
                   return (
                     <div className='relative w-full pt-[100%]' key={img} onMouseEnter={() => chooseActive(img)}>
@@ -175,37 +182,13 @@ export default function ProductDetail() {
 
               <div className='mt-8 flex items-center'>
                 <div className='capitalize text-gray-500'>Số lượng</div>
-                <div className='ml-10 flex items-center'>
-                  <button className='flex size-8 items-center justify-center rounded-l-sm border border-r-gray-300 text-gray-600'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth={1.5}
-                      stroke='currentColor'
-                      className='size-4'
-                    >
-                      <path strokeLinecap='round' strokeLinejoin='round' d='M5 12h14' />
-                    </svg>
-                  </button>
-                  <InputNumber
-                    value={1}
-                    classNameError='hidden'
-                    classNameInput='h-8 w-14 border-b border-t border-gray-300 p-1 text-center outline-none'
-                  />
-                  <button className='flex size-8 items-center justify-center rounded-r-sm border border-r-gray-300 text-gray-600'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth={1.5}
-                      stroke='currentColor'
-                      className='size-4'
-                    >
-                      <path strokeLinecap='round' strokeLinejoin='round' d='M12 4.5v15m7.5-7.5h-15' />
-                    </svg>
-                  </button>
-                </div>
+                <QuantityController
+                  onIncrease={handleBuyCount}
+                  onDecrease={handleBuyCount}
+                  onType={handleBuyCount}
+                  value={buyCount}
+                  max={product.quantity}
+                />
                 <div className='ml-5 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
               </div>
 
