@@ -13,12 +13,14 @@ import { FOLDERS, FOLDER_UPLOAD, ROUTE_IMAGE } from './constants/config'
 import path from 'path'
 import { isProduction } from './utils/helper'
 require('dotenv').config()
+connectMongoDB()
 
 const app: express.Application = express()
-connectMongoDB()
+app.use(cors())
 const routes = [{ ...commonRoutes }, { ...userRoutes }]
 app.use(helmet())
-app.use(cors())
+// Hoặc cấu hình cho phép các nguồn cụ thể
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
