@@ -138,7 +138,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
         <div>Khoảng giá</div>
         <form className='mt-2' onSubmit={onSubmit}>
           <div className='flex items-start'>
-            {/* <Controller
+            <Controller
               control={control}
               name='price_min'
               render={({ field }) => {
@@ -158,8 +158,8 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
                   />
                 )
               }}
-            /> */}
-            <InputV2
+            />
+            {/* <InputV2
               control={control}
               name='price_min'
               type='number'
@@ -170,7 +170,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
               onChange={() => {
                 trigger('price_max')
               }}
-            />
+            /> */}
             <div className='mx-2 mt-2 shrink-0'>-</div>
             <Controller
               control={control}
