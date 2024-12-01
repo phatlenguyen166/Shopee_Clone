@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useParams } from 'react-router-dom'
 import productApi from '../../apis/product.api'
 import ProductRating from '../../Components/ProductRating'
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from '../../utils/utils'
@@ -10,11 +10,13 @@ import { Product as ProductType, ProductListConfig } from '../../types/product.t
 import Product from '../ProductList/components/Product'
 import QuantityController from '../../Components/QuantityController'
 import purchaseApi from '../../apis/purchase.api'
-import { queryClient } from '../../main'
 import { purchasesStatus } from '../../constants/purchase'
 import { toast } from 'react-toastify'
+import path from '../../constants/path'
 
 export default function ProductDetail() {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [buyCount, setBuyCount] = useState(1)
 
   const { nameId } = useParams()
@@ -104,6 +106,16 @@ export default function ProductDetail() {
         }
       }
     )
+  }
+
+  const buyNow = async () => {
+    const res = await addToCartMutation.mutateAsync({ product_id: product?._id as string, buy_count: buyCount })
+    const purchase = res.data.data
+    navigate(path.cart, {
+      state: {
+        purchaseId: purchase._id
+      }
+    })
   }
 
   if (!product) return null
@@ -241,7 +253,10 @@ export default function ProductDetail() {
                   </svg>
                   <span className='ml-2'>Thêm vào giỏ hàng</span>
                 </button>
-                <button className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-orange px-5 capitalize text-white shadow-sm outline-none hover:bg-orange/90'>
+                <button
+                  onClick={buyNow}
+                  className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-orange px-5 capitalize text-white shadow-sm outline-none hover:bg-orange/90'
+                >
                   Mua ngay
                 </button>
               </div>

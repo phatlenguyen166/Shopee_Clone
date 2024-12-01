@@ -5,13 +5,16 @@ import ProductList from './pages/ProductList'
 import Register from './pages/Register'
 import RegisterLayout from './Layouts/RegisterLayout'
 import MainLayout from './Layouts/MainLayout'
-import Profile from './pages/Profile'
 import { useContext } from 'react'
 import { AppContext } from './contexts/app,.context'
-import { log } from 'console'
 import path from './constants/path'
 import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
+import CartLayout from './Layouts/CartLayout'
+import UserLayout from './pages/User/layouts'
+import ChangePassword from './pages/User/pages/ChangePassword'
+import HistoryPurchase from './pages/User/pages/HistoryPurchase'
+import Profile from './pages/User/pages/Profile'
 // const isAuthenticated = false
 const ProtectedRoute = () => {
   const { isAuthenticated } = useContext(AppContext)
@@ -52,19 +55,33 @@ export default function useRouteElement() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: path.profile,
+          path: path.user,
           element: (
             <MainLayout>
-              <Profile />
+              <UserLayout />
             </MainLayout>
-          )
+          ),
+          children: [
+            {
+              path: path.changePassword,
+              element: <ChangePassword />
+            },
+            {
+              path: path.profile,
+              element: <Profile />
+            },
+            {
+              path: path.historyPurchase,
+              element: <HistoryPurchase />
+            }
+          ]
         },
         {
           path: path.cart,
           element: (
-            <MainLayout>
+            <CartLayout>
               <Cart />
-            </MainLayout>
+            </CartLayout>
           )
         }
       ]
