@@ -10,10 +10,10 @@ const UserSchema = new Schema(
     address: { type: String, maxlength: 160 },
     phone: { type: String, maxlength: 20 },
     roles: { type: [String], required: true, default: [ROLE.USER] },
-    avatar: { type: String, maxlength: 1000 },
+    avatar: { type: String, maxlength: 1000 }
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 )
 

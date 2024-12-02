@@ -13,7 +13,6 @@ import { FOLDERS, FOLDER_UPLOAD, ROUTE_IMAGE } from '../constants/config'
 import fs from 'fs'
 import { omitBy } from 'lodash'
 import { ORDER, SORT_BY } from '../constants/product'
-import { CategoryModel } from '~/database/models/category.model'
 
 export const handleImageProduct = (product: any) => {
   if (product.image !== undefined && product.image !== '') {
