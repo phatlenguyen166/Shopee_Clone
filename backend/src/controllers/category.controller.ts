@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { Request, Response } from 'express'
-import { responseSuccess, ErrorHandler } from '../utils/response'
+import { responseSuccess, ErrorHandler, responseError } from '../utils/response'
 import { STATUS } from '../constants/status'
 import { CategoryModel } from '../database/models/category.model'
 
@@ -39,7 +39,7 @@ const getCategory = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy Category')
+    return responseError(res, new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy Category'))
   }
 }
 
@@ -55,7 +55,7 @@ const updateCategory = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy Category')
+    return responseError(res, new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy Category'))
   }
 }
 
@@ -65,7 +65,7 @@ const deleteCategory = async (req: Request, res: Response) => {
   if (categoryDB) {
     return responseSuccess(res, { message: 'Xóa thành công' })
   } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy Category')
+    return responseError(res, new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy Category'))
   }
 }
 

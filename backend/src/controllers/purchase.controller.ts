@@ -5,7 +5,7 @@ import { STATUS_PURCHASE } from '../constants/purchase'
 import { STATUS } from '../constants/status'
 import { ProductModel } from '../database/models/product.model'
 import { PurchaseModel } from '../database/models/purchase.model'
-import { ErrorHandler, responseSuccess } from '../utils/response'
+import { ErrorHandler, responseError, responseSuccess } from '../utils/response'
 import { handleImageProduct } from './product.controller'
 import { cloneDeep } from 'lodash'
 
@@ -14,7 +14,7 @@ export const addToCart = async (req: Request, res: Response) => {
   const product: any = await ProductModel.findById(product_id).lean()
   if (product) {
     if (buy_count > product.quantity) {
-      throw new ErrorHandler(STATUS.NOT_ACCEPTABLE, 'Số lượng vượt quá số lượng sản phẩm')
+      return responseError(res, new ErrorHandler(STATUS.NOT_ACCEPTABLE, 'Số lượng vượt quá số lượng sản phẩm'))
     }
     const purchaseInDb: any = await PurchaseModel.findOne({
       user: req.jwtDecoded.id,
@@ -75,7 +75,7 @@ export const addToCart = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm')
+    responseError(res, new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm'))
   }
 }
 
@@ -97,7 +97,7 @@ export const updatePurchase = async (req: Request, res: Response) => {
     .lean()
   if (purchaseInDb) {
     if (buy_count > purchaseInDb.product.quantity) {
-      throw new ErrorHandler(STATUS.NOT_ACCEPTABLE, 'Số lượng vượt quá số lượng sản phẩm')
+      responseError(res, new ErrorHandler(STATUS.NOT_ACCEPTABLE, 'Số lượng vượt quá số lượng sản phẩm'))
     }
     const data = await PurchaseModel.findOneAndUpdate(
       {
@@ -127,7 +127,7 @@ export const updatePurchase = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy đơn')
+    return responseError(res, new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy đơn'))
   }
 }
 
@@ -137,7 +137,7 @@ export const buyProducts = async (req: Request, res: Response) => {
     const product: any = await ProductModel.findById(item.product_id).lean()
     if (product) {
       if (item.buy_count > product.quantity) {
-        throw new ErrorHandler(STATUS.NOT_ACCEPTABLE, 'Số lượng mua vượt quá số lượng sản phẩm')
+        return responseError(res, new ErrorHandler(STATUS.NOT_ACCEPTABLE, 'Số lượng mua vượt quá số lượng sản phẩm'))
       } else {
         let data = await PurchaseModel.findOneAndUpdate(
           {
@@ -182,7 +182,7 @@ export const buyProducts = async (req: Request, res: Response) => {
         purchases.push(data)
       }
     } else {
-      throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm')
+      responseError(res, new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm'))
     }
   }
   const response = {

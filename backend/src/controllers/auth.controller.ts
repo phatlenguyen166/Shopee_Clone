@@ -1,14 +1,16 @@
-import { ErrorHandler, responseSuccess } from '~/utils/response'
-import { omit } from 'lodash'
-import { config } from '~/constants/config'
-import { ROLE } from '~/constants/role.enum'
-import { RefreshTokenModel } from '~/database/models/refresh-token.model'
-import { AccessTokenModel } from '~/database/models/access-token.model'
-import { signToken } from '~/utils/jwt'
-import { UserModel } from '~/database/models/user.model'
-import { compareValue, hashValue } from '~/utils/crypt'
-import { STATUS } from '~/constants/status'
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ErrorHandler, responseError, responseSuccess } from '../utils/response'
+import { hashValue, compareValue } from '../utils/crypt'
+import { config } from '../constants/config'
+import { signToken } from '../utils/jwt'
 import { Request, Response } from 'express'
+import { ROLE } from '../constants/role.enum'
+import { UserModel } from '../database/models/user.model'
+import { AccessTokenModel } from '../database/models/access-token.model'
+import { RefreshTokenModel } from '../database/models/refresh-token.model'
+import { omit } from 'lodash'
+import { STATUS } from '../constants/status'
 
 const getExpire = (req: Request) => {
   let expireAccessTokenConfig = Number(req.headers['expire-access-token'])
@@ -66,29 +68,38 @@ const registerController = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   }
-  throw new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
-    email: 'Email đã tồn tại'
-  })
+  return responseError(
+    res,
+    new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
+      email: 'Email đã tồn tại'
+    })
+  )
 }
 
 const loginController = async (req: Request, res: Response) => {
   const { expireAccessTokenConfig, expireRefreshTokenConfig } = getExpire(req)
   const body: Login = req.body
   const { email, password } = body
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userInDB: any = await UserModel.findOne({ email: email }).lean()
+  console.log(userInDB)
+
   if (!userInDB) {
-    throw new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
-      password: 'Email hoặc password không đúng'
-    })
+    return responseError(
+      res,
+      new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
+        password: 'Email hoặc password không đúng'
+      })
+    )
   } else {
     const match = compareValue(password, userInDB.password)
     if (!match) {
-      throw new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
-        password: 'Email hoặc password không đúng'
-      })
+      return responseError(
+        res,
+        new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
+          password: 'Email hoặc password không đúng'
+        })
+      )
     }
-    // eslint-disable-next-line prefer-const
     let payloadJWT: PayloadToken = {
       id: userInDB._id,
       email: userInDB.email,
@@ -121,6 +132,30 @@ const loginController = async (req: Request, res: Response) => {
   }
 }
 
+const refreshTokenController = async (req: Request, res: Response) => {
+  const { expireAccessTokenConfig } = getExpire(req)
+  const userDB: any = await UserModel.findById(req.jwtDecoded.id).lean()
+  if (userDB) {
+    const payload: PayloadToken = {
+      id: userDB._id,
+      email: userDB.email,
+      roles: userDB.roles,
+      created_at: new Date().toISOString()
+    }
+    const access_token = await signToken(payload, config.SECRET_KEY, expireAccessTokenConfig)
+    await new AccessTokenModel({
+      user_id: req.jwtDecoded.id,
+      token: access_token
+    }).save()
+    const response = {
+      message: 'Refresh Token thành công',
+      data: { access_token: 'Bearer ' + access_token }
+    }
+    return responseSuccess(res, response)
+  }
+  return responseError(res, new ErrorHandler(401, 'Refresh Token không tồn tại'))
+}
+
 const logoutController = async (req: Request, res: Response) => {
   const access_token = req.headers.authorization?.replace('Bearer ', '')
   await AccessTokenModel.findOneAndDelete({
@@ -132,7 +167,8 @@ const logoutController = async (req: Request, res: Response) => {
 const authController = {
   registerController,
   loginController,
-  logoutController
+  logoutController,
+  refreshTokenController
 }
 
 export default authController

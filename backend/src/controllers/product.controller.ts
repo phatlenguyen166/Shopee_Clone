@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prefer-const */
 import { Request, Response } from 'express'
-import { responseSuccess, ErrorHandler } from '../utils/response'
+import { responseSuccess, ErrorHandler, responseError } from '../utils/response'
 import { ProductModel } from '../database/models/product.model'
 import { STATUS } from '../constants/status'
 import mongoose, { SortOrder } from 'mongoose'
@@ -183,7 +183,7 @@ const getProduct = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm')
+    return responseError(res, new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm'))
   }
 }
 
@@ -219,7 +219,7 @@ const updateProduct = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm')
+    return responseError(res, new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm'))
   }
 }
 
@@ -231,7 +231,7 @@ const deleteProduct = async (req: Request, res: Response) => {
     removeManyImageProduct(productDB.images)
     return responseSuccess(res, { message: 'Xóa thành công' })
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm')
+    return responseError(res, new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm'))
   }
 }
 
@@ -253,7 +253,7 @@ const deleteManyProducts = async (req: Request, res: Response) => {
       data: { deleted_count: deletedData.deletedCount }
     })
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm')
+    return responseError(res, new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm'))
   }
 }
 

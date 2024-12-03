@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { hashValue } from '../utils/crypt'
 import { Request, Response } from 'express'
-import { responseSuccess, ErrorHandler } from '../utils/response'
+import { responseSuccess, ErrorHandler, responseError } from '../utils/response'
 import { UserModel } from '../database/models/user.model'
 import { STATUS } from '../constants/status'
 import { omitBy } from 'lodash'
@@ -40,7 +40,7 @@ const addUser = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   }
-  throw new ErrorHandler(422, { email: 'Email đã tồn tại' })
+  return responseError(res, new ErrorHandler(422, { email: 'Email đã tồn tại' }))
 }
 
 const getUsers = async (req: Request, res: Response) => {
@@ -61,7 +61,7 @@ const getDetailMySelf = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.UNAUTHORIZED, 'Không tìm thấy người dùng')
+    responseError(res, new ErrorHandler(STATUS.UNAUTHORIZED, 'Không tìm thấy người dùng'))
   }
 }
 
@@ -74,7 +74,7 @@ const getUser = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy người dùng')
+    responseError(res, new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy người dùng'))
   }
 }
 
@@ -105,7 +105,7 @@ const updateUser = async (req: Request, res: Response) => {
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy người dùng')
+    responseError(res, new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy người dùng'))
   }
 }
 
@@ -139,9 +139,12 @@ const updateMe = async (req: Request, res: Response) => {
     if (hash_password === userDB.password) {
       Object.assign(user, { password: hashValue(new_password) })
     } else {
-      throw new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
-        password: 'Password không đúng'
-      })
+      responseError(
+        res,
+        new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
+          password: 'Password không đúng'
+        })
+      )
     }
   }
   const updatedUserDB = await UserModel.findByIdAndUpdate(req.jwtDecoded.id, user, { new: true })
@@ -160,7 +163,7 @@ const deleteUser = async (req: Request, res: Response) => {
   if (userDB) {
     return responseSuccess(res, { message: 'Xóa thành công' })
   } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy người dùng')
+    responseError(res, new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy người dùng'))
   }
 }
 
