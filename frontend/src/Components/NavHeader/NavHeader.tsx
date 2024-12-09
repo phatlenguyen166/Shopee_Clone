@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useRef } from 'react'
 import Popover from '../Poppver'
 import { AppContext } from '../../contexts/app,.context'
 import { Link } from 'react-router-dom'
@@ -7,6 +7,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import authApi from '../../apis/auth.api'
 import { purchasesStatus } from '../../constants/purchase'
 import logoProfile from '../../assets/images/logo-profile.png'
+import userImg from '../../assets/images/userProfile.svg'
+import { get } from 'lodash'
+import { getAvatarUrl } from '../../utils/utils'
+
 export default function NavHeader() {
   const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
   const queryClient = useQueryClient()
@@ -83,7 +87,7 @@ export default function NavHeader() {
               <Link to={path.profile} className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
                 Tài khoản của tôi
               </Link>
-              <Link to='/' className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
+              <Link to={path.cart} className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
                 Đơn mua
               </Link>
               <button
@@ -98,7 +102,7 @@ export default function NavHeader() {
           <div className='mr-2 h-6 w-6 flex-shrink-0'>
             <img
               crossOrigin='anonymous'
-              src={logoProfile}
+              src={getAvatarUrl(profile?.avatar || '')}
               alt='avatar'
               className='h-full w-full rounded-full object-cover'
             />

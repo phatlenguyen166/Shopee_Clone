@@ -19,14 +19,14 @@ export class ErrorHandler extends Error {
 }
 
 export const responseError = (res: Response, error: ErrorHandler | any) => {
+  if (res.headersSent) return // Ngăn không gửi phản hồi lần thứ hai
+
   if (error instanceof ErrorHandler) {
     const status = error.status
-    // Case just string
     if (typeof error.error === 'string') {
       const message = error.error
       return res.status(status).send({ message })
     }
-    // Case error is object
     const errorObject = error.error
     return res.status(status).send({
       message: 'Lỗi',

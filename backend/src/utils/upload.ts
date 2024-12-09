@@ -9,6 +9,7 @@ import { STATUS } from '../constants/status'
 import { isEmpty } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { FOLDER_UPLOAD } from '../constants/config'
+import { log } from 'console'
 
 const getExtension = (filename: string | null) => {
   if (filename !== null) {
@@ -20,12 +21,20 @@ const getExtension = (filename: string | null) => {
 const upload = (image: any, folder: any): Promise<string> => {
   return new Promise((resolve, reject) => {
     const dir = `${FOLDER_UPLOAD}${folder ? '/' + folder : ''}`
+    // console.log(dir)
+
     if (!fs.existsSync(dir)) {
       shelljs.mkdir('-p', dir)
     }
-    const tmpPath = image.path
-    const newName = uuidv4() + '.' + getExtension(image.name)
+    const tmpPath = image[0].filepath
+    const newName = uuidv4() + '.' + getExtension(image[0].originalFilename)
     const newPath = dir + '/' + newName
+    // console.log(tmpPath)
+
+    // console.log(newPath)
+
+    // console.log(newName)
+
     mv(tmpPath, newPath, function (err) {
       if (err) return reject(new ErrorHandler(STATUS.INTERNAL_SERVER_ERROR, 'Lỗi đổi tên file'))
       resolve(newName)
@@ -42,10 +51,12 @@ export const uploadFile = (req: Request, folder = '') => {
       }
       try {
         const { image }: { image: any } = files
+        // console.log(image)
+
         const errorEntity: any = {}
         if (!image) {
           errorEntity.image = 'Không tìm thấy image'
-        } else if (!image.type.includes('image')) {
+        } else if (!image[0].mimetype.includes('image')) {
           errorEntity.image = 'image không đúng định dạng'
         } else if (image.size > 1000000) {
           errorEntity.image = 'Kích thước image phải <= 1MB'

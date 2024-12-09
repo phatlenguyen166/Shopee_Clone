@@ -1,3 +1,4 @@
+import { log } from 'console'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-require-imports */
 import express from 'express'
@@ -24,10 +25,15 @@ app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-const dirNameWithEnv = isProduction ? path.dirname(__dirname) : __dirname
+//ver1
+// const dirNameWithEnv = isProduction ? path.dirname(__dirname) : __dirname
+
+//ver2
+const dirNameWithEnv = isProduction ? path.dirname(__dirname) : path.dirname(__dirname)
 
 const handlerImage: any = Object.values(FOLDERS).reduce(
   (result: any, current: any) => {
+    console.log(path.join(dirNameWithEnv, `/${FOLDER_UPLOAD}/${current}`))
     return [...result, express.static(path.join(dirNameWithEnv, `/${FOLDER_UPLOAD}/${current}`))]
   },
   [express.static(path.join(dirNameWithEnv, `/${FOLDER_UPLOAD}`))]

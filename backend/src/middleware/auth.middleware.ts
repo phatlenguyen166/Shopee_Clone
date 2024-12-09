@@ -8,25 +8,49 @@ import { STATUS } from '../constants/status'
 import { body } from 'express-validator'
 import { AccessTokenModel } from '~/database/models/access-token.model'
 
-const verifyAccessToken = async (req: Request, res: Response, next: NextFunction) => {
-  const access_token = req.headers.authorization?.replace('Bearer ', '')
-  if (access_token) {
-    try {
-      const decoded = (await verifyToken(access_token, config.SECRET_KEY)) as PayloadToken
-      req.jwtDecoded = decoded
-      const accessTokenDB = await AccessTokenModel.findOne({
-        token: access_token
-      }).exec()
+// const verifyAccessToken = async (req: Request, res: Response, next: NextFunction) => {
+//   const access_token = req.headers.authorization?.replace('Bearer ', '')
+//   if (access_token) {
+//     try {
+//       const decoded = (await verifyToken(access_token, config.SECRET_KEY)) as PayloadToken
+//       req.jwtDecoded = decoded
+//       const accessTokenDB = await AccessTokenModel.findOne({
+//         token: access_token
+//       }).exec()
 
-      if (accessTokenDB) {
-        return next()
-      }
-      responseError(res, new ErrorHandler(STATUS.UNAUTHORIZED, 'Không tồn tại token'))
-    } catch (error) {
-      responseError(res, error)
-    }
+//       if (accessTokenDB) {
+//         return next()
+//       }
+//       responseError(res, new ErrorHandler(STATUS.UNAUTHORIZED, 'Không tồn tại token'))
+//     } catch (error) {
+//       responseError(res, error)
+//     }
+//   }
+//   responseError(res, new ErrorHandler(STATUS.UNAUTHORIZED, 'Token không được gửi'))
+// }
+
+const verifyAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const access_token = req.headers.authorization?.replace('Bearer ', '')
+
+  if (!access_token) {
+    responseError(res, new ErrorHandler(STATUS.UNAUTHORIZED, 'Token không được gửi'))
+    return // Thêm return để kết thúc hàm
   }
-  responseError(res, new ErrorHandler(STATUS.UNAUTHORIZED, 'Token không được gửi'))
+
+  try {
+    const decoded = (await verifyToken(access_token, config.SECRET_KEY)) as PayloadToken
+    req.jwtDecoded = decoded
+
+    const accessTokenDB = await AccessTokenModel.findOne({ token: access_token }).exec()
+    if (accessTokenDB) {
+      next() // Chỉ gọi next() nếu token hợp lệ
+      return
+    }
+
+    responseError(res, new ErrorHandler(STATUS.UNAUTHORIZED, 'Không tồn tại token'))
+  } catch {
+    responseError(res, new ErrorHandler(STATUS.UNAUTHORIZED, 'Token không hợp lệ'))
+  }
 }
 
 const loginRules = () => {

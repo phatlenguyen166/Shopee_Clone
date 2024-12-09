@@ -27,7 +27,7 @@ const idValidator = (req: Request, res: Response, next: NextFunction) => {
   if (errors.isEmpty()) {
     return next()
   }
-  const error: ErrorThrow = errors.array().reduce((result: any, item, index) => {
+  const error: ErrorThrow = errors.array().reduce((result: any, item) => {
     if (isValidationError(item)) {
       result[item.param] = item.msg
     }

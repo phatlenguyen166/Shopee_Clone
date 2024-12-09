@@ -1,12 +1,22 @@
 import { Link } from 'react-router-dom'
 import path from '../../../../constants/path'
 import logoProfile from '../../../../assets/images/logo-profile.png'
+import userImg from '../../../../assets/images/userProfile.svg'
+import { useContext } from 'react'
+import { AppContext } from '../../../../contexts/app,.context'
+import { getAvatarUrl } from '../../../../utils/utils'
 export default function UserSideNav() {
+  const { profile } = useContext(AppContext)
   return (
     <div>
       <div className='flex items-center border-b border-gray-200 bg-white p-4'>
         <Link to={path.profile} className='size-12 flex-shrink-0 overflow-hidden rounded-full border border-black/10'>
-          <img src={logoProfile} alt='Ảnh cá nhân' className='h-full w-full object-cover' />
+          <img
+            crossOrigin='anonymous'
+            src={getAvatarUrl(profile?.avatar || '')}
+            // className='h-full w-full object-cover'
+            className={userImg ? 'h-full w-full bg-orange object-cover' : 'h-full w-full object-cover'}
+          />
         </Link>
         <div className='flex-grow pl-4'>
           <div className='mb-1 truncate text-base font-semibold text-gray-600'>phatlenguyen</div>
@@ -15,7 +25,7 @@ export default function UserSideNav() {
               <path
                 d='M8.54 0L6.987 1.56l3.46 3.48L12 3.48M0 8.52l.073 3.428L3.46 12l6.21-6.18-3.46-3.48'
                 fill='#9B9B9B'
-                fill-rule='evenodd'
+                fillRule='evenodd'
               ></path>
             </svg>
             Sửa hồ sơ

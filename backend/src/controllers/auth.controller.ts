@@ -81,7 +81,7 @@ const loginController = async (req: Request, res: Response) => {
   const body: Login = req.body
   const { email, password } = body
   const userInDB: any = await UserModel.findOne({ email: email }).lean()
-  console.log(userInDB)
+  // console.log(userInDB)
 
   if (!userInDB) {
     return responseError(

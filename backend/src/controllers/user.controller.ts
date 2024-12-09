@@ -110,7 +110,10 @@ const updateUser = async (req: Request, res: Response) => {
 }
 
 const uploadAvatar = async (req: Request, res: Response) => {
+  // console.log('REQ: 1', req)
+
   const path = await uploadFile(req, FOLDERS.AVATAR)
+
   const response = {
     message: 'Upload ảnh đại diện thành công',
     data: path
