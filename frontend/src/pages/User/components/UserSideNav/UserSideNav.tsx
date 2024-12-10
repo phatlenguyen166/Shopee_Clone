@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import path from '../../../../constants/path'
-import logoProfile from '../../../../assets/images/logo-profile.png'
 import userImg from '../../../../assets/images/userProfile.svg'
 import { useContext } from 'react'
 import { AppContext } from '../../../../contexts/app,.context'
 import { getAvatarUrl } from '../../../../utils/utils'
+import classNames from 'classnames'
 export default function UserSideNav() {
   const { profile } = useContext(AppContext)
   return (
@@ -33,7 +33,15 @@ export default function UserSideNav() {
         </div>
       </div>
       <div className='mt-5'>
-        <Link to={path.profile} className='transition-color flex items-center capitalize text-orange'>
+        <NavLink
+          to={path.profile}
+          className={({ isActive }) =>
+            classNames('transition-color flex items-center capitalize', {
+              'text-orange': isActive,
+              'text-gray-600': !isActive
+            })
+          }
+        >
           <div className='mr-3 size-[20px]'>
             <img
               className='size-full'
@@ -41,10 +49,18 @@ export default function UserSideNav() {
             />
           </div>
           Tài khoản của tôi
-        </Link>
+        </NavLink>
       </div>
       <div className='mt-5'>
-        <Link to={path.changePassword} className='transition-color flex items-center capitalize text-gray-600'>
+        <NavLink
+          to={path.changePassword}
+          className={({ isActive }) =>
+            classNames('transition-color flex items-center capitalize', {
+              'text-orange': isActive,
+              'text-gray-600': !isActive
+            })
+          }
+        >
           <div className='mr-3 size-[20px]'>
             <img
               className='size-full'
@@ -52,15 +68,23 @@ export default function UserSideNav() {
             />
           </div>
           Đổi mật khẩu
-        </Link>
+        </NavLink>
       </div>
       <div className='mt-5'>
-        <Link to={path.historyPurchase} className='transition-color flex items-center capitalize text-gray-600'>
+        <NavLink
+          to={path.historyPurchase}
+          className={({ isActive }) =>
+            classNames('transition-color flex items-center capitalize', {
+              'text-orange': isActive,
+              'text-gray-600': !isActive
+            })
+          }
+        >
           <div className='mr-3 size-[20px]'>
             <img src='https://down-vn.img.susercontent.com/file/f0049e9df4e536bc3e7f140d071e9078' />
           </div>
           Đơn mua
-        </Link>
+        </NavLink>
       </div>
     </div>
   )
