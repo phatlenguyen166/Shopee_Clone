@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import productApi from '../../apis/product.api'
 import ProductRating from '../../Components/ProductRating'
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from '../../utils/utils'
-import InputNumber from '../../Components/InputNumber'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Product as ProductType, ProductListConfig } from '../../types/product.type'
@@ -21,10 +20,16 @@ export default function ProductDetail() {
 
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
-  const { data: productDetailData } = useQuery({
+
+  const { data: productDetailData, isError } = useQuery({
     queryKey: ['product', id],
     queryFn: () => productApi.getProductDetail(id as string)
   })
+
+  if (isError) {
+    navigate('*', { replace: true })
+  }
+
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
   const product = productDetailData?.data.data
