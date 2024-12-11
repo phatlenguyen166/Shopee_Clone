@@ -87,7 +87,7 @@ export default function NavHeader() {
               <Link to={path.profile} className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
                 Tài khoản của tôi
               </Link>
-              <Link to={path.cart} className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
+              <Link to={path.historyPurchase} className='block px-4 py-3 hover:bg-slate-100 hover:text-cyan-500'>
                 Đơn mua
               </Link>
               <button

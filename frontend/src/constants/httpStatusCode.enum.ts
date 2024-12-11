@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 enum HttpStatusCode {
   Continue = 100,
   SwitchingProtocols = 101,

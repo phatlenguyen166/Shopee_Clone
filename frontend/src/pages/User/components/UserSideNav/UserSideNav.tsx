@@ -9,7 +9,7 @@ export default function UserSideNav() {
   const { profile } = useContext(AppContext)
   return (
     <div>
-      <div className='flex items-center border-b border-gray-200 bg-white p-4'>
+      <div className='flex items-center border-b border-gray-300 bg-gray-200 p-4'>
         <Link to={path.profile} className='size-12 flex-shrink-0 overflow-hidden rounded-full border border-black/10'>
           <img
             crossOrigin='anonymous'
