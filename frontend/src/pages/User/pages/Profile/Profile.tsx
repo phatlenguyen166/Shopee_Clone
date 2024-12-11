@@ -165,7 +165,7 @@ export default function Profile() {
               </div>
             </div>
             <Info />
-            <div className='mt-2 flex flex-col flex-wrap sm:flex-row'>
+            <div className='mt-8 flex flex-col flex-wrap justify-center sm:flex-row'>
               <div className='w-[20%] truncate pt-3 text-right capitalize'>Địa chỉ</div>
               <div className='w-[80%] pl-5'>
                 <Input

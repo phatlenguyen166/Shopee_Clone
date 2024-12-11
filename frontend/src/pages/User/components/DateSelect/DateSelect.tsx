@@ -43,7 +43,7 @@ export default function DateSelect({ onChange, value, errorMessage }: Props) {
       <div className='sm:w-[80%] sm:pl-5'>
         <div className='flex justify-between'>
           <select
-            className='px- h-10 w-[32%] cursor-pointer rounded-sm border border-black/10 hover:border-orange'
+            className='h-10 w-[32%] cursor-pointer rounded-sm border border-black/10 px-3 hover:border-orange'
             onChange={handleChange}
             name='date'
             value={value?.getDate() || date.date}
@@ -51,14 +51,14 @@ export default function DateSelect({ onChange, value, errorMessage }: Props) {
             {/* <option disabled>Ngày</option> */}
             {range(1, 32).map((item) => {
               return (
-                <option value={item} key={item}>
+                <option value={item} key={item} className='ml-auto mr-auto'>
                   {item}
                 </option>
               )
             })}
           </select>
           <select
-            className='px- h-10 w-[32%] cursor-pointer rounded-sm border border-black/10 hover:border-orange'
+            className='h-10 w-[32%] cursor-pointer rounded-sm border border-black/10 px-3 hover:border-orange'
             onChange={handleChange}
             name='month'
             value={value?.getMonth() || date.month}
@@ -73,7 +73,7 @@ export default function DateSelect({ onChange, value, errorMessage }: Props) {
             })}
           </select>
           <select
-            className='px- h-10 w-[32%] cursor-pointer rounded-sm border border-black/10 hover:border-orange'
+            className='h-10 w-[32%] cursor-pointer rounded-sm border border-black/10 px-3 hover:border-orange'
             onChange={handleChange}
             name='year'
             value={value?.getFullYear() || date.year}

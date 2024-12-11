@@ -38,7 +38,7 @@ export default function Login() {
       onSuccess: (data) => {
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
-        toast.success(data.data.message)
+        toast.success(data.data.message, { autoClose: 500 })
         navigate('/')
         reset()
       },
@@ -68,8 +68,8 @@ export default function Login() {
               <Input
                 type='email'
                 errorMessage={errors.email?.message}
-                placeholder='Email'
                 className='mt-8'
+                placeholder='Email'
                 name='email'
                 register={register}
               />
@@ -78,10 +78,10 @@ export default function Login() {
                 type='password'
                 errorMessage={errors.password?.message}
                 placeholder='Password'
-                className='mt-2'
                 name='password'
                 register={register}
                 autoComplete='on'
+                className='relative mt-2'
               />
               <div className='mt-3'>
                 <Button
